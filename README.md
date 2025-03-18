@@ -28,10 +28,6 @@ A base de dados utilizada neste projeto está disponível no Kaggle, sob o nome 
 |   |-- analise_dados.ipynb     # Análise exploratória dos dados
 |   |-- modelo_treinamento.ipynb # Treinamento do modelo de ML
 |
-|-- src/
-|   |-- preprocessamento.py     # Funções de limpeza e preparação dos dados
-|   |-- treinamento.py          # Código de treinamento do modelo
-|
 |-- README.md                   # Documentação do projeto
 ```
 
