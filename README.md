@@ -1,49 +1,42 @@
-# Analisador de Sentimentos em Português
+# Analisador de Sentimentos em Português usando BERT
+
+Este projeto implementa um analisador de sentimentos em português utilizando o modelo BERT pré-treinado, otimizado para execução em TPU no Kaggle.
 
 ## Descrição
-Este projeto tem como objetivo criar um modelo de *Machine Learning* para analisar sentimentos em textos e classificá-los como positivos ou negativos. Para isso, utilizamos uma base de dados do IMDb (Internet Movie Database), traduzida para o português, contendo aproximadamente 50 mil resenhas de filmes.
 
-## Base de Dados
-A base de dados utilizada neste projeto está disponível no Kaggle, sob o nome **"IMDB PT-BR"**. Trata-se de uma tradução automática de uma base original do IMDb, permitindo a análise de sentimentos em português.
+O modelo analisa resenhas de filmes em português do dataset IMDB PT-BR e as classifica como positivas ou negativas. Utiliza-se o BERT base em português da NeuralMind, fine-tuned para esta tarefa específica.
 
-### Download da Base de Dados
-1. Acesse o [Kaggle](https://www.kaggle.com/).
-2. Busque por **"IMDB PT-BR"**.
-3. Escolha a opção correspondente e faça o download dos dados.
-4. Salve o arquivo `imdb-reviews-pt-br.csv` na pasta `dados/` do projeto.
+## Principais Características
 
-## Ferramentas Utilizadas
-- **Python** (Linguagem principal do projeto)
-- **Pandas** (Para manipulação e análise dos dados)
-- **Google Colab** (Ambiente de execução dos códigos, mas pode utilizar qual preferir)
-- **Scikit-Learn** (Para criação do modelo de *Machine Learning*)
+- Utiliza BERT pré-treinado em português
+- Implementa early stopping
+- Usa DataLoader distribuído para eficiência
+- Aplica pré-processamento de texto com spaCy
+
+## Dependências
+
+- PyTorch
+- Transformers (Hugging Face)
+- spaCy
+- scikit-learn
+- pandas
+- numpy
 
 ## Estrutura do Projeto
-```
-/
-|-- dados/
-|   |-- imdb-reviews-pt-br.csv  # Arquivo com as resenhas traduzidas
-|
-|-- notebooks/
-|   |-- analise_dados.ipynb     # Análise exploratória dos dados
-|   |-- modelo_treinamento.ipynb # Treinamento do modelo de ML
-|
-|-- README.md                   # Documentação do projeto
-```
 
-## Como Começar
-1. Clone este repositório:
-   ```bash
-   git clone https://github.com/seu-usuario/seu-repositorio.git
-   ```
-2. Instale as dependências necessárias:
-   ```bash
-   pip install pandas scikit-learn numpy
-   ```
-3. Execute o *notebook* `notebooks/analise_dados.ipynb` para visualizar os dados.
-4. Execute `notebooks/modelo_treinamento.ipynb` para treinar o modelo.
+1. Importação e pré-processamento dos dados
+2. Tokenização e preparação dos datasets
+3. Definição e treinamento do modelo
+4. Avaliação do modelo
+5. Salvamento do modelo treinado
 
-## Resultados Esperados
-Após o treinamento do modelo, ele será capaz de classificar novas resenhas como positivas ou negativas, permitindo análises automáticas de opinião.
+## Como Usar
 
+1. Faça upload do notebook para o Kaggle
+2. Certifique-se de ter o dataset IMDB PT-BR disponível
+3. Execute as células em ordem
+4. O modelo treinado será salvo no diretório de trabalho do Kaggle
 
+## Resultados
+
+O modelo atinge uma acurácia competitiva na classificação de sentimentos em português, demonstrando a eficácia do BERT para esta tarefa.
