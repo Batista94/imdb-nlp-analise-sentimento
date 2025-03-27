@@ -96,7 +96,7 @@ print(f"Sentimento: {sentiment}")
 
 1. Clone este repositório:  
 ```bash
-git clone https://github.com/seuusuario/seurepositorio.git
+git clone https://github.com/Batista94/imdb-nlp-analise-sentimento.git
 cd seurepositorio
 ```  
 2. Baixe o modelo do Kaggle e extraia os arquivos no diretório do projeto  
