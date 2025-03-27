@@ -1,60 +1,63 @@
-# Analisador de Sentimentos em Português com DistilBERT
+# Analisador de Sentimentos em Português com DistilBERT  
 
-Este projeto implementa um analisador de sentimentos em português utilizando o modelo **DistilBERT**, otimizado para eficiência computacional e execução em GPUs, sendo compatível com Kaggle e Google Colab.
+Este projeto implementa um analisador de sentimentos em português utilizando o modelo DistilBERT, otimizado para eficiência computacional e execução em GPUs. Ele é compatível com Google Colab e Kaggle, permitindo fácil experimentação e reuso.  
 
-## Descrição
+## Visão Geral  
 
-O modelo analisa resenhas de filmes em português do dataset [**IMDB PT-BR**](https://www.kaggle.com/datasets/luisfredgs/imdb-ptbr) e as classifica como **positivas ou negativas**. Para isso, utilizamos o **DistilBERT**, uma versão compacta e eficiente do BERT, treinada especificamente para essa tarefa.
+O modelo classifica resenhas de filmes em português do dataset [IMDB PT-BR](https://www.kaggle.com/datasets/luisfredgs/imdb-ptbr) como positivas ou negativas. Para isso, utilizamos o DistilBERT, uma versão compacta e eficiente do BERT, treinada especificamente para essa tarefa.  
 
-## Características Principais
+## Principais Características  
 
-- Baseado no **DistilBERT**, versão otimizada do BERT;
-- Implementa **early stopping** para evitar overfitting;
-- Usa **DataLoader** para uma alimentação eficiente dos dados;
-- Aplica **técnicas avançadas de pré-processamento** com **spaCy**, incluindo:
-  - **Lematização**;
-  - **Remoção de stopwords, pontuação, espaços, URLs e e-mails**;
-- Utiliza **GradScaler e autocast** para melhor desempenho em GPUs.
+- Baseado no DistilBERT, uma versão otimizada do BERT  
+- Implementa early stopping para evitar overfitting  
+- Usa DataLoader para alimentação eficiente dos dados  
+- Aplica técnicas avançadas de pré-processamento com spaCy, incluindo:  
+  - Lematização  
+  - Remoção de stopwords, pontuação, espaços, URLs e e-mails  
+- Utiliza GradScaler e autocast para melhor desempenho em GPUs  
 
-## Dependências
+## Dependências  
 
-- PyTorch  
-- Transformers (Hugging Face)  
-- spaCy  
-- scikit-learn  
-- pandas  
-- numpy  
+Certifique-se de instalar todas as bibliotecas necessárias antes de rodar o código:  
 
-## Estrutura do Projeto
+```bash
+pip install torch transformers spacy scikit-learn pandas numpy
+```  
 
-1. **Importação e pré-processamento dos dados** (remoção de stopwords, lematização, tokenização);
-2. **Tokenização e separação dos datasets** para treino e teste;
-3. **Definição e treinamento do modelo** DistilBERT;
-4. **Avaliação do modelo** com métricas de desempenho;
-5. **Salvamento do modelo treinado** para reutilização.
+## Estrutura do Projeto  
 
-## Modelo Treinado
+1. Importação e pré-processamento dos dados (remoção de stopwords, lematização, tokenização)  
+2. Tokenização e separação dos datasets para treino e teste  
+3. Definição e treinamento do modelo DistilBERT  
+4. Avaliação do modelo com métricas de desempenho  
+5. Salvamento do modelo treinado para reutilização  
 
-O repositório inclui duas versões do modelo treinado:
+## Modelo Treinado  
 
-- **Pasta `imdb-ptbrmodelo_bert_treinado`**:
-  - `config.json`: Configuração do modelo;
-  - `model.safetensors`: Pesos do modelo treinado;
-  - `special_tokens_map.json`: Mapeamento de tokens especiais;
-  - `tokenizer_config.json`: Configuração do tokenizador;
-  - `vocab.txt`: Vocabulário utilizado pelo modelo.
-- **Arquivo `melhor_modelo.pt`**: Modelo salvo no formato PyTorch (265.63 MB).
+Devido ao tamanho dos arquivos, o modelo treinado não está armazenado diretamente neste repositório. No entanto, ele pode ser baixado no Kaggle:  
 
-### Como Carregar o Modelo Treinado
+[Download do Modelo Treinado](https://www.kaggle.com/code/wesleibatista/imbd-nlp-ptbr/output)  
 
-#### Opção 1: Usando os arquivos Hugging Face
+O download inclui:  
+
+- `config.json` – Configuração do modelo  
+- `model.safetensors` – Pesos do modelo treinado  
+- `special_tokens_map.json` – Mapeamento de tokens especiais  
+- `tokenizer_config.json` – Configuração do tokenizador  
+- `vocab.txt` – Vocabulário utilizado pelo modelo  
+
+### Como Carregar o Modelo Treinado  
+
+Após baixar os arquivos, extraia-os no diretório do projeto e utilize o código abaixo:  
+
+#### Opção 1: Usando os arquivos Hugging Face  
 
 ```python
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-# Carregar o tokenizador e o modelo do diretório local
-tokenizer = AutoTokenizer.from_pretrained("./imdb-ptbrmodelo_bert_treinado")
-model = AutoModelForSequenceClassification.from_pretrained("./imdb-ptbrmodelo_bert_treinado")
+# Carregar o modelo e o tokenizador do diretório local
+tokenizer = AutoTokenizer.from_pretrained("./modelo_treinado")
+model = AutoModelForSequenceClassification.from_pretrained("./modelo_treinado")
 
 # Exemplo de classificação
 texto = "Este filme é maravilhoso, adorei cada minuto!"
@@ -63,20 +66,20 @@ outputs = model(**inputs)
 prediction = outputs.logits.argmax(-1).item()
 sentiment = "positivo" if prediction == 1 else "negativo"
 print(f"Sentimento: {sentiment}")
-```
+```  
 
-#### Opção 2: Usando o arquivo PyTorch
+#### Opção 2: Usando o arquivo PyTorch  
 
 ```python
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-# Carregar o modelo
+# Carregar o modelo salvo em PyTorch
 modelo = torch.load('melhor_modelo.pt')
 modelo.eval()
 
 # Carregar o tokenizador
-tokenizer = AutoTokenizer.from_pretrained("./imdb-ptbrmodelo_bert_treinado")
+tokenizer = AutoTokenizer.from_pretrained("./modelo_treinado")
 
 # Exemplo de classificação
 texto = "Este filme é maravilhoso, adorei cada minuto!"
@@ -85,39 +88,63 @@ outputs = modelo(**inputs)
 prediction = outputs.logits.argmax(-1).item()
 sentiment = "positivo" if prediction == 1 else "negativo"
 print(f"Sentimento: {sentiment}")
-```
+```  
 
-### Benefícios do Modelo Treinado
+## Como Utilizar  
 
-- **Redução de tempo**: Evita um treinamento longo e custoso;
-- **Economia de recursos**: Dispensa necessidade de GPUs para treino;
-- **Resultados imediatos**: Pode ser utilizado diretamente para inferência.
+### Opção 1: Utilizando o Modelo Treinado (Recomendado)  
 
-## Como Utilizar
+1. Clone este repositório:  
+```bash
+git clone https://github.com/seuusuario/seurepositorio.git
+cd seurepositorio
+```  
+2. Baixe o modelo do Kaggle e extraia os arquivos no diretório do projeto  
+3. Siga as instruções da seção "Como Carregar o Modelo Treinado"  
 
-### Opção 1: Usando o modelo treinado (recomendado)
-1. Clone este repositório;
-2. Carregue o modelo conforme demonstrado na seção "Como Carregar o Modelo Treinado";
-3. Utilize o modelo para classificar novos textos.
+### Opção 2: Treinando o Modelo do Zero  
 
-### Opção 2: Treinando o modelo do zero
-1. Faça upload do notebook no Kaggle ou Google Colab;
-2. Certifique-se de ter o dataset IMDB PT-BR disponível;
-3. Execute todas as células do notebook;
-4. O modelo treinado será salvo no diretório de trabalho.
+1. Acesse o [notebook no Kaggle](https://www.kaggle.com/code/wesleibatista/imbd-nlp-ptbr)  
+2. Certifique-se de ter o dataset IMDB PT-BR disponível  
+3. Execute todas as células do notebook  
+4. O modelo treinado será salvo no diretório de trabalho  
 
-## Resultados
+## Resultados  
 
-O modelo alcançou uma **acurácia competitiva** na classificação de sentimentos em português, comprovando a eficiência do DistilBERT para essa tarefa.
+O modelo atingiu uma acurácia competitiva na classificação de sentimentos em português, comprovando a eficiência do DistilBERT para essa tarefa.  
 
-## Aprendizados Durante o Desenvolvimento
+Principais melhorias aplicadas:  
 
-Ao longo do projeto, algumas melhorias foram implementadas para aumentar a qualidade e eficiência do modelo:
+- Uso do DistilBERT: Redução do custo computacional sem comprometer a performance  
+- Pré-processamento avançado com spaCy: Melhor qualidade dos dados textuais  
+- Uso de GradScaler e autocast: Execução otimizada em GPUs  
+- Ajuste do dataset: Apenas colunas essenciais (`text_pt`, `sentiment`) foram mantidas  
 
-- **Uso do DistilBERT**: Reduziu o custo computacional sem prejudicar a performance;
-- **Pré-processamento avançado com spaCy**: Melhorou a qualidade dos dados textuais;
-- **Uso de GradScaler e autocast**: Otimizou a execução em GPUs;
-- **Ajuste do dataset**: Apenas colunas essenciais (`text_pt`, `sentiment`) foram mantidas para melhor eficiência.
+Essas otimizações tornaram o modelo mais rápido, eficiente e preciso na classificação de sentimentos.  
 
-Essas melhorias tornaram o modelo mais rápido, eficiente e preciso na classificação de sentimentos.
+## Aprendizados Durante o Desenvolvimento  
 
+Durante o desenvolvimento deste projeto, foram exploradas diversas técnicas que aprimoraram a análise de sentimentos em português:  
+
+- Otimização com DistilBERT: Permitiu uma execução mais eficiente em comparação com o BERT tradicional  
+- Fine-tuning em Português: Melhorou a precisão do modelo ao lidar com nuances da língua portuguesa  
+- Processamento de Texto Avançado: Técnicas como lematização e remoção de stopwords aumentaram a qualidade dos dados  
+
+Esse projeto representa um avanço significativo na classificação de sentimentos em português, tornando-o um ótimo recurso para análises de opinião e aplicações em NLP.  
+
+## Próximos Passos  
+
+- Treinar o modelo com um dataset maior para melhorar a generalização  
+- Explorar técnicas de data augmentation para ampliar a base de treino  
+- Implementar uma API para permitir inferências em tempo real  
+
+## Contribuições  
+
+Contribuições são bem-vindas. Se você deseja melhorar o projeto, siga os passos abaixo:  
+
+1. Faça um fork deste repositório  
+2. Crie uma branch para sua feature (`git checkout -b minha-feature`)  
+3. Implemente as mudanças e faça commit (`git commit -m "Minha contribuição"`)  
+4. Envie um pull request e aguarde a revisão  
+
+Se este projeto foi útil para você, não se esqueça de dar uma estrela no repositório.  
